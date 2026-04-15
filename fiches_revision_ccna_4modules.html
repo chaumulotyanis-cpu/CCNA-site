@@ -1,0 +1,657 @@
+
+<!DOCTYPE html>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#0f1117;--bg2:#171b24;--bg3:#1e2330;--bg4:#252b3b;
+  --text:#e8ecf4;--text2:#9aa3b8;--text3:#5c6478;
+  --blue:#4d9cf8;--blue-dim:#1a3a5c;
+  --green:#3ecf8e;--green-dim:#0d3320;
+  --amber:#f5a623;--amber-dim:#3d2a0a;
+  --red:#f06a6a;--red-dim:#3d1515;
+  --purple:#a78bfa;--purple-dim:#2d1f5e;
+  --teal:#2dd4bf;--teal-dim:#0d3330;
+  --border:#2a3047;
+  --radius:10px;
+  --mono:'IBM Plex Mono',monospace;
+  --sans:'IBM Plex Sans',sans-serif;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.6;min-height:100vh;}
+
+/* NAV */
+.nav{display:flex;gap:6px;padding:16px 16px 0;flex-wrap:wrap;border-bottom:1px solid var(--border);background:var(--bg);position:sticky;top:0;z-index:10;}
+.nav-btn{padding:8px 14px;border-radius:8px 8px 0 0;border:1px solid var(--border);border-bottom:none;background:var(--bg2);color:var(--text2);cursor:pointer;font-family:var(--sans);font-size:13px;font-weight:500;transition:all .2s;white-space:nowrap;}
+.nav-btn:hover{background:var(--bg3);color:var(--text);}
+.nav-btn.active{background:var(--bg3);color:var(--text);border-color:var(--blue);border-bottom:1px solid var(--bg3);}
+.nav-dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:6px;}
+
+/* CONTENT */
+.content{display:none;padding:20px 16px;}
+.content.active{display:block;}
+
+/* SECTION */
+.section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:14px;}
+.section-head{font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.tag{font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px;letter-spacing:.04em;text-transform:uppercase;}
+.tag-red{background:var(--red-dim);color:var(--red);}
+.tag-blue{background:var(--blue-dim);color:var(--blue);}
+.tag-green{background:var(--green-dim);color:var(--green);}
+.tag-amber{background:var(--amber-dim);color:var(--amber);}
+.tag-purple{background:var(--purple-dim);color:var(--purple);}
+
+/* TABLE */
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{text-align:left;color:var(--text2);font-weight:500;padding:6px 8px;border-bottom:1px solid var(--border);font-size:12px;}
+td{padding:7px 8px;border-bottom:1px solid var(--border);vertical-align:top;color:var(--text);}
+tr:last-child td{border-bottom:none;}
+td strong{color:var(--blue);font-weight:500;}
+
+/* CODE */
+code{font-family:var(--mono);font-size:12px;background:var(--bg4);color:var(--teal);padding:2px 6px;border-radius:4px;}
+
+/* BOXES */
+.piege{background:var(--red-dim);border-left:3px solid var(--red);border-radius:0 var(--radius) var(--radius) 0;padding:10px 13px;margin-top:10px;font-size:13px;color:var(--text);}
+.piege-label{font-weight:600;color:var(--red);font-size:12px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
+.tip{background:var(--green-dim);border-left:3px solid var(--green);border-radius:0 var(--radius) var(--radius) 0;padding:10px 13px;margin-top:10px;font-size:13px;color:var(--text);}
+.tip-label{font-weight:600;color:var(--green);font-size:12px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
+.info{background:var(--blue-dim);border-left:3px solid var(--blue);border-radius:0 var(--radius) var(--radius) 0;padding:10px 13px;margin-top:10px;font-size:13px;color:var(--text);}
+.info-label{font-weight:600;color:var(--blue);font-size:12px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
+
+/* GRID */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:8px;}
+.card{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;}
+.card-title{font-weight:600;font-size:12px;color:var(--text2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em;}
+.card p{font-size:13px;color:var(--text);}
+ul{padding-left:16px;font-size:13px;}
+li{margin-bottom:4px;color:var(--text);}
+
+/* FLASH CARDS */
+.flash-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.flash{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;cursor:pointer;transition:border-color .2s;}
+.flash:hover{border-color:var(--blue);}
+.flash-q{font-size:13px;font-weight:500;color:var(--text);margin-bottom:0;}
+.flash-a{font-size:12px;color:var(--green);margin-top:8px;display:none;padding-top:8px;border-top:1px solid var(--border);}
+.flash.open .flash-a{display:block;}
+.flash-hint{font-size:11px;color:var(--text3);margin-top:6px;}
+
+/* PORTS TABLE */
+.ports-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px;}
+.port-card{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center;}
+.port-num{font-family:var(--mono);font-size:18px;font-weight:600;color:var(--amber);}
+.port-name{font-size:12px;color:var(--text);margin-top:2px;font-weight:500;}
+.port-proto{font-size:11px;color:var(--text3);margin-top:1px;}
+
+/* PROGRESS */
+.module-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.module-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.module-info h2{font-size:16px;font-weight:600;}
+.module-info p{font-size:12px;color:var(--text2);}
+
+/* SUBNETTING CALC */
+.calc-section{background:var(--bg3);border-radius:8px;padding:14px;margin-top:10px;}
+.calc-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:13px;}
+.calc-label{color:var(--text2);min-width:120px;font-size:12px;}
+.calc-val{font-family:var(--mono);color:var(--amber);font-weight:600;}
+.formula-box{background:var(--bg4);border-radius:8px;padding:12px;font-family:var(--mono);font-size:13px;color:var(--teal);margin-top:8px;}
+
+@media(max-width:600px){
+  .grid2,.grid3,.flash-grid,.ports-grid{grid-template-columns:1fr;}
+}
+</style>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="showTab('m1')"><span class="nav-dot" style="background:#4d9cf8"></span>Mod. 1 — Réseau & L3</button>
+  <button class="nav-btn" onclick="showTab('m2')"><span class="nav-dot" style="background:#f5a623"></span>Mod. 2 — Adressage IP</button>
+  <button class="nav-btn" onclick="showTab('m3')"><span class="nav-dot" style="background:#3ecf8e"></span>Mod. 3 — Transport & Appli</button>
+  <button class="nav-btn" onclick="showTab('m4')"><span class="nav-dot" style="background:#a78bfa"></span>Mod. 4 — Sécu & Dépannage</button>
+</div>
+
+<!-- ============ MODULE 1 ============ -->
+<div class="content active" id="m1">
+  <div class="module-header">
+    <div class="module-icon" style="background:var(--blue-dim)">🌐</div>
+    <div class="module-info">
+      <h2>Réseau & Couche 3</h2>
+      <p>IP · ARP · Routage · Switch · Mémoire Cisco · Commandes de base</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">En-tête IPv4 — champs critiques <span class="tag tag-red">Piège fréquent</span></div>
+    <table>
+      <tr><th>Champ</th><th>Rôle</th><th>Note</th></tr>
+      <tr><td><strong>Version</strong></td><td>Identifie IPv4</td><td><code>0100</code> en binaire = valeur 4</td></tr>
+      <tr><td><strong>TTL</strong></td><td>Limite la durée de vie du paquet — décrémenté à chaque routeur, supprimé à 0</td><td>Empêche les boucles infinies</td></tr>
+      <tr><td><strong>Protocol</strong></td><td>Identifie le protocole de couche supérieure</td><td>TCP=6 · UDP=17 · ICMP=1</td></tr>
+      <tr><td><strong>Differentiated Services</strong></td><td>Priorité / QoS du paquet</td><td>≠ Protocol !</td></tr>
+    </table>
+    <div class="piege"><div class="piege-label">⚠ Piège</div>"Quel champ identifie le protocole supérieur ?" → <strong>Protocol</strong>, pas Differentiated Services. "Quel champ empêche un paquet de tourner indéfiniment ?" → <strong>TTL</strong>, pas numéro de séquence (qui est TCP).</div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">En-tête IPv6 — nouveautés</div>
+    <table>
+      <tr><th>Champ IPv6</th><th>Équivalent IPv4</th><th>Rôle</th></tr>
+      <tr><td><strong>Flow Label</strong></td><td>—</td><td>Garantit le même chemin pour une session temps réel (VoIP, vidéo)</td></tr>
+      <tr><td><strong>Traffic Class</strong></td><td>Differentiated Services</td><td>Priorité du paquet</td></tr>
+      <tr><td><strong>Hop Limit</strong></td><td>TTL</td><td>Décrémenté à chaque saut, paquet supprimé à 0</td></tr>
+    </table>
+    <div class="tip"><div class="tip-label">✓ Mnémo</div>Flow Label = "même autoroute pour tout le flux" — utilisé pour les <strong>applications temps réel</strong>.</div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">ARP — 3 propriétés clés <span class="tag tag-red">Très fréquent</span></div>
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">Requête ARP (broadcast)</div>
+        <p>MAC destination = <code>FF:FF:FF:FF:FF:FF</code><br>→ Envoyée à <strong>tous</strong> les équipements du LAN<br>→ Le switch inonde tous ses ports</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Réponse ARP (unicast)</div>
+        <p>Renvoyée uniquement à la source<br>→ L'adresse MAC source dans l'en-tête Ethernet permet l'identification</p>
+      </div>
+      <div class="card">
+        <div class="card-title">ARP statique</div>
+        <p>Entrée IP↔MAC saisie manuellement → utile pour les serveurs fréquemment utilisés (évite les requêtes répétées)</p>
+      </div>
+      <div class="card">
+        <div class="card-title">IPv6 : plus d'ARP !</div>
+        <p>Remplacé par <strong>ICMPv6 Neighbor Discovery</strong><br>→ <strong>Neighbor Solicitation</strong> (requête)<br>→ <strong>Neighbor Advertisement</strong> (réponse)</p>
+      </div>
+    </div>
+    <div class="piege"><div class="piege-label">⚠ Piège classique</div>"Pourquoi le switch inonde lors d'une requête ARP ?" → Parce que la <strong>destination MAC est FF:FF:FF:FF:FF:FF (broadcast)</strong>, pas parce que la source est un broadcast.</div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">Comportement du switch</div>
+    <table>
+      <tr><th>Situation</th><th>Comportement</th></tr>
+      <tr><td>MAC destination <strong>connue</strong> dans la table</td><td>Envoie uniquement vers le port concerné</td></tr>
+      <tr><td>MAC destination <strong>inconnue</strong></td><td>Inonde tous les ports (sauf port d'entrée)</td></tr>
+      <tr><td>Adresse de <strong>diffusion</strong> (broadcast)</td><td>Inonde tous les ports (sauf port d'entrée)</td></tr>
+    </table>
+    <div class="info"><div class="info-label">ℹ Passerelle par défaut sur un switch</div>Commande : <code>ip default-gateway 172.16.100.1</code><br>→ Permet de <strong>gérer le switch à distance</strong> depuis un autre réseau (SSH/Telnet)<br>→ Ne fournit PAS de routage pour les PC connectés au switch</div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">Mémoire des équipements Cisco <span class="tag tag-red">Souvent posé</span></div>
+    <table>
+      <tr><th>Mémoire</th><th>Contenu</th><th>Volatile ?</th></tr>
+      <tr><td><strong>RAM</strong></td><td>Running-config — configuration en cours d'exécution</td><td>Oui — perdu au reboot</td></tr>
+      <tr><td><strong>NVRAM</strong></td><td>Startup-config — configuration de démarrage</td><td>Non — persiste</td></tr>
+      <tr><td><strong>Flash</strong></td><td>Système d'exploitation IOS</td><td>Non</td></tr>
+      <tr><td><strong>ROM</strong></td><td>Bootstrap / POST (démarrage)</td><td>Non</td></tr>
+    </table>
+    <div class="tip"><div class="tip-label">✓ Commande clé</div><code>copy running-config startup-config</code> → copie RAM → NVRAM → sauvegarde la config. Le contenu de la <strong>NVRAM changera</strong>.</div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">Commandes Cisco de base <span class="tag tag-green">Points faciles</span></div>
+    <table>
+      <tr><th>Commande</th><th>Rôle</th></tr>
+      <tr><td><code>line console 0</code></td><td>Accès config port console</td></tr>
+      <tr><td><code>password cisco</code> + <code>login</code></td><td>Mot de passe sur la console (les 2 sont obligatoires)</td></tr>
+      <tr><td><code>line vty 0 4</code></td><td>Config Telnet/SSH — 5 sessions simultanées max</td></tr>
+      <tr><td><code>enable secret cisco</code></td><td>Mot de passe mode privilégié (chiffré)</td></tr>
+      <tr><td><code>banner motd</code></td><td>Message de bannière — tester : <code>exit</code> puis Entrée</td></tr>
+      <tr><td><code>ip default-gateway X.X.X.X</code></td><td>Passerelle par défaut sur un switch</td></tr>
+    </table>
+    <div class="piege"><div class="piege-label">⚠ Piège</div>Pour sécuriser la console : <code>line console 0</code> + <code>password cisco</code> + <code>login</code>. La commande <code>line vty 0 4</code> c'est pour Telnet, pas la console. <code>enable secret</code> c'est pour le mode privilégié, pas la console.</div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">Modèle OSI — couche réseau (L3)</div>
+    <ul>
+      <li><strong>2 services de la couche réseau :</strong> Encapsulation des PDU de la couche transport + Routage des paquets vers la destination</li>
+      <li><strong>IP est sans connexion et non fiable</strong> — c'est TCP (couche supérieure) qui gère les erreurs, pas la couche 2</li>
+      <li><strong>Table de routage d'un hôte :</strong> route de loopback + route locale + route par défaut distante</li>
+    </ul>
+  </div>
+
+  <!-- Flash cards M1 -->
+  <div class="section">
+    <div class="section-head">Flash cards — clique pour voir la réponse</div>
+    <div class="flash-grid">
+      <div class="flash" onclick="this.classList.toggle('open')">
+        <div class="flash-q">Quel champ IPv4 empêche un paquet de circuler indéfiniment ?</div>
+        <div class="flash-a">TTL (Time To Live) — décrémenté à chaque routeur, paquet supprimé à 0</div>
+        <div class="flash-hint">Clique pour voir</div>
+      </div>
+      <div class="flash" onclick="this.classList.toggle('open')">
+        <div class="flash-q">Où est stockée la startup-config sur un routeur Cisco ?</div>
+        <div class="flash-a">NVRAM — non volatile, persiste après extinction</div>
+        <div class="flash-hint">Clique pour voir</div>
+      </div>
+      <div class="flash" onclick="this.classList.toggle('open')">
+        <div class="flash-q">Pourquoi IPv6 n'utilise pas ARP ?</div>
+        <div class="flash-a">IPv6 utilise ICMPv6 Neighbor Discovery : Neighbor Solicitation (requête) et Neighbor Advertisement (réponse)</div>
+        <div class="flash-hint">Clique pour voir</div>
+      </div>
+      <div class="flash" onclick="this.classList.toggle('open')">
+        <div class="flash-q">Quand un switch inonde-t-il tous ses ports ?</div>
+        <div class="flash-a">1) Adresse MAC destination inconnue, 2) Adresse de diffusion (FF:FF:FF:FF:FF:FF)</div>
+        <div class="flash-hint">Clique pour voir</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODULE 2 ============ -->
+<div class="content" id="m2">
+  <div class="module-header">
+    <div class="module-icon" style="background:var(--amber-dim)">🔢</div>
+    <div class="module-info">
+      <h2>Adressage IP — Subnetting & IPv6</h2>
+      <p>Sous-réseaux · Masques · CIDR · IPv6 · SLAAC · EUI-64 · ICMP</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">Subnetting — méthode rapide <span class="tag tag-red">Points perdus ici !</span></div>
+    <div class="formula-box">Nombre de sous-réseaux = 2^n  (n = bits empruntés)
+Nombre d'hôtes utiles = 2^h - 2  (h = bits hôtes restants)
+Masque /26 → 6 bits hôtes → 2^6 - 2 = 62 hôtes</div>
+    <div class="calc-section">
+      <table>
+        <tr><th>Préfixe</th><th>Masque</th><th>Bits hôtes</th><th>Hôtes utilisables</th></tr>
+        <tr><td><code>/24</code></td><td>255.255.255.0</td><td>8</td><td>254</td></tr>
+        <tr><td><code>/25</code></td><td>255.255.255.128</td><td>7</td><td>126</td></tr>
+        <tr><td><code>/26</code></td><td>255.255.255.192</td><td>6</td><td>62</td></tr>
+        <tr><td><code>/27</code></td><td>255.255.255.224</td><td>5</td><td>30</td></tr>
+        <tr><td><code>/28</code></td><td>255.255.255.240</td><td>4</td><td>14</td></tr>
+        <tr><td><code>/29</code></td><td>255.255.255.248</td><td>3</td><td>6</td></tr>
+        <tr><td><code>/22</code></td><td>255.255.252.0</td><td>10</td><td>1022</td></tr>
+      </table>
+    </div>
+    <div class="tip"><div class="tip-label">✓ Astuce</div>255.255.255.224 → compter les 1 : 11111111.11111111.11111111.<strong>111</strong>00000 → 3 bits empruntés → /27</div>
+    <div class="piege"><div class="piege-label">⚠ Erreur fréquente</div>Pour 5 réseaux connectés → il faut 2^n ≥ 5 → n=<strong>3</strong> bits (2^3=8, pas 5). Tu avais répondu 5 au lieu de 3 !</div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">Adresses RFC 1918 — plages privées <span class="tag tag-green">Points faciles</span></div>
+    <div class="grid3">
+      <div class="card" style="text-align:center">
+        <div class="card-title">Classe A</div>
+        <p><code>10.0.0.0/8</code></p>
+      </div>
+      <div class="card" style="text-align:center">
+        <div class="card-title">Classe B</div>
+        <p><code>172.16.0.0/12</code></p>
+      </div>
+      <div class="card" style="text-align:center">
+        <div class="card-title">Classe C</div>
+        <p><code>192.168.0.0/16</code></p>
+      </div>
+    </div>
+    <div class="info"><div class="info-label">ℹ APIPA</div>Si un PC ne trouve pas de serveur DHCP → adresse <code>169.254.x.x/16</code> attribuée automatiquement par Windows (APIPA)</div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">Types d'adresses IPv4</div>
+    <table>
+      <tr><th>Type</th><th>Description</th><th>Exemple</th></tr>
+      <tr><td><strong>Monodiffusion</strong></td><td>Un expéditeur → un destinataire</td><td>192.168.1.10</td></tr>
+      <tr><td><strong>Diffusion (broadcast)</strong></td><td>Un expéditeur → tous les hôtes du même sous-réseau</td><td>192.168.1.255</td></tr>
+      <tr><td><strong>Diffusion dirigée</strong></td><td>Un expéditeur → tous les hôtes d'un réseau <em>distant</em></td><td>172.16.19.255</td></tr>
+      <tr><td><strong>Multidiffusion</strong></td><td>Un expéditeur → un groupe d'hôtes inscrits</td><td>224.0.0.x</td></tr>
+      <tr><td><strong>Diffusion limitée</strong></td><td>Limité au réseau local uniquement</td><td>255.255.255.255</td></tr>
+    </table>
+    <div class="piege"><div class="piege-label">⚠ Piège</div>"Message envoyé à tous les hôtes d'un réseau <strong>distant</strong>" → c'est une <strong>diffusion dirigée</strong>, pas multidiffusion !</div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">IPv6 — types d'adresses <span class="tag tag-red">Souvent posé</span></div>
+    <table>
+      <tr><th>Type</th><th>Préfixe</th><th>Description</th></tr>
+      <tr><td><strong>Monodiffusion globale</strong></td><td><code>2000::/3</code></td><td>Routable sur Internet — commence par 2 ou 3</td></tr>
+      <tr><td><strong>Link-local</strong></td><td><code>FE80::/10</code></td><td>Non routable — communication sur le même lien uniquement</td></tr>
+      <tr><td><strong>Loopback</strong></td><td><code>::1/128</code></td><td>Test local de la pile TCP/IP</td></tr>
+      <tr><td><strong>Anycast</strong></td><td>Monodiffusion affectée à plusieurs hôtes</td><td>Paquet livré au plus proche</td></tr>
+      <tr><td><strong>Multidiffusion</strong></td><td><code>FF00::/8</code></td><td>FF02::1 = tous les hôtes · FF02::2 = tous les routeurs</td></tr>
+    </table>
+    <div class="piege"><div class="piege-label">⚠ Piège</div>Il n'y a <strong>pas de broadcast en IPv6</strong> ! Une adresse monodiffusion affectée à plusieurs hôtes = <strong>anycast</strong>. Loopback et link-local sont des types de <strong>monodiffusion</strong>.</div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">Compression IPv6 — règles</div>
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">Règle 1 — Zéros initiaux</div>
+        <p>Supprimer les zéros initiaux dans chaque groupe<br><code>0090</code> → <code>90</code> · <code>0000</code> → <code>0</code></p>
+      </div>
+      <div class="card">
+        <div class="card-title">Règle 2 — Double deux-points</div>
+        <p><code>::</code> remplace <strong>une seule série continue</strong> de groupes à zéros — ne peut être utilisé <strong>qu'une fois</strong> !</p>
+      </div>
+    </div>
+    <div class="piege"><div class="piege-label">⚠ Piège</div><code>3FFE:1044:0000:0000:00AB:0000:0000:0057</code><br>❌ <code>3FFE:1044::00AB::0057</code> — deux :: interdits !<br>✅ <code>3FFE:1044:0:0:AB::57</code> — :: sur la 2e série de zéros seulement</div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">EUI-64 & SLAAC</div>
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">EUI-64</div>
+        <p>Crée l'ID d'interface (64 bits) à partir de l'adresse MAC (48 bits)<br>→ Insère <code>FF:FE</code> au milieu de l'adresse MAC<br>→ Inverse le 7e bit</p>
+      </div>
+      <div class="card">
+        <div class="card-title">SLAAC</div>
+        <p>Configuration automatique sans serveur DHCP<br>→ Le routeur envoie le préfixe réseau<br>→ L'hôte génère son propre ID d'interface (via EUI-64 ou aléatoire)</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">Codes ICMP à connaître</div>
+    <table>
+      <tr><th>Code</th><th>Signification</th></tr>
+      <tr><td><code>0</code></td><td>Réseau inaccessible</td></tr>
+      <tr><td><code>2</code></td><td>Au-delà de la portée de l'adresse source</td></tr>
+      <tr><td><code>3</code></td><td>Adresse inaccessible</td></tr>
+      <tr><td><code>4</code></td><td>Port inaccessible</td></tr>
+    </table>
+    <div class="piege"><div class="piege-label">⚠ Piège</div>Code 4 = <strong>Port inaccessible</strong> (pas "hôte inaccessible" ni "protocole inaccessible"). Tu avais des erreurs sur les codes 0, 3 et 4 !</div>
+  </div>
+
+  <!-- Flash cards M2 -->
+  <div class="section">
+    <div class="section-head">Flash cards — clique pour voir la réponse</div>
+    <div class="flash-grid">
+      <div class="flash" onclick="this.classList.toggle('open')">
+        <div class="flash-q">Combien d'hôtes utiles sur un réseau /26 ?</div>
+        <div class="flash-a">2^6 - 2 = 62 hôtes (6 bits pour les hôtes)</div>
+        <div class="flash-hint">Clique pour voir</div>
+      </div>
+      <div class="flash" onclick="this.classList.toggle('open')">
+        <div class="flash-q">Pour 5 réseaux, combien de bits emprunter ?</div>
+        <div class="flash-a">3 bits (2^3 = 8 ≥ 5) — pas 5 !</div>
+        <div class="flash-hint">Clique pour voir</div>
+      </div>
+      <div class="flash" onclick="this.classList.toggle('open')">
+        <div class="flash-q">Que signifie FF02::1 en IPv6 ?</div>
+        <div class="flash-a">Tous les périphériques IPv6 sur la liaison locale (multidiffusion)</div>
+        <div class="flash-hint">Clique pour voir</div>
+      </div>
+      <div class="flash" onclick="this.classList.toggle('open')">
+        <div class="flash-q">Quelle plage est attribuée si DHCP est injoignable ?</div>
+        <div class="flash-a">169.254.0.0/16 (APIPA — Windows uniquement)</div>
+        <div class="flash-hint">Clique pour voir</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODULE 3 ============ -->
+<div class="content" id="m3">
+  <div class="module-header">
+    <div class="module-icon" style="background:var(--green-dim)">📡</div>
+    <div class="module-info">
+      <h2>Transport & Application</h2>
+      <p>TCP · UDP · Ports · HTTP · DNS · DHCP · FTP · SMB · P2P · OSI vs TCP/IP</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">TCP vs UDP — comparaison directe <span class="tag tag-red">Très fréquent</span></div>
+    <table>
+      <tr><th>Critère</th><th>TCP</th><th>UDP</th></tr>
+      <tr><td>Connexion</td><td>Orienté connexion (handshake 3 étapes)</td><td>Sans connexion</td></tr>
+      <tr><td>Fiabilité</td><td>Garantit la livraison (accusés de réception)</td><td>Pas de garantie — best effort</td></tr>
+      <tr><td>Ordre</td><td>Réassemble dans l'ordre (numéros de séquence)</td><td>Reconstitue dans l'ordre de réception</td></tr>
+      <tr><td>Vitesse</td><td>Plus lent (overhead)</td><td>Plus rapide (moins d'overhead)</td></tr>
+      <tr><td>Utilisation</td><td>HTTP, HTTPS, FTP, SMTP, SSH, Telnet</td><td>DNS (client), DHCP, TFTP, VoIP, streaming</td></tr>
+    </table>
+    <div class="tip"><div class="tip-label">✓ UDP quand ?</div>UDP est préféré quand : la <strong>vitesse prime</strong> sur la fiabilité, ou quand l'application gère elle-même la fiabilité, ou quand une petite perte de données est acceptable (streaming, VoIP)</div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">Fenêtre TCP & numéros de séquence <span class="tag tag-red">Calculs aux QCM</span></div>
+    <div class="info"><div class="info-label">ℹ Logique</div>La taille de la fenêtre = quantité de données que la <strong>destination peut traiter</strong> (pas la source). L'accusé de réception (ACK) contient le numéro du prochain octet attendu.</div>
+    <div class="calc-section">
+      <p style="font-size:13px;margin-bottom:10px;color:var(--text2);">Exemple : fenêtre 6000 octets, paquets de 1500 octets</p>
+      <table>
+        <tr><th>Après réception de</th><th>ACK envoyé par le serveur</th><th>Logique</th></tr>
+        <tr><td>1 paquet (octets 1–1500)</td><td>ACK = 1501</td><td>1500 + 1 = 1501</td></tr>
+        <tr><td>2 paquets (1–3000)</td><td>ACK = 3001</td><td>3000 + 1 = 3001</td></tr>
+        <tr><td>3 paquets (1–4500)</td><td>ACK = 4501</td><td>4500 + 1 = 4501</td></tr>
+      </table>
+    </div>
+    <div class="piege"><div class="piege-label">⚠ Piège</div>Après 2 paquets de 1500 octets → ACK = <strong>3001</strong> (pas 3000, pas 4500). L'ACK indique le prochain octet attendu = dernier reçu + 1.</div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">Numéros de ports à connaître <span class="tag tag-green">Points faciles</span></div>
+    <div class="ports-grid">
+      <div class="port-card"><div class="port-num">20/21</div><div class="port-name">FTP</div><div class="port-proto">TCP</div></div>
+      <div class="port-card"><div class="port-num">22</div><div class="port-name">SSH</div><div class="port-proto">TCP</div></div>
+      <div class="port-card"><div class="port-num">23</div><div class="port-name">Telnet</div><div class="port-proto">TCP</div></div>
+      <div class="port-card"><div class="port-num">25</div><div class="port-name">SMTP</div><div class="port-proto">TCP</div></div>
+      <div class="port-card"><div class="port-num">53</div><div class="port-name">DNS</div><div class="port-proto">UDP/TCP</div></div>
+      <div class="port-card"><div class="port-num">67/68</div><div class="port-name">DHCP</div><div class="port-proto">UDP</div></div>
+      <div class="port-card"><div class="port-num">69</div><div class="port-name">TFTP</div><div class="port-proto">UDP</div></div>
+      <div class="port-card"><div class="port-num">80</div><div class="port-name">HTTP</div><div class="port-proto">TCP</div></div>
+      <div class="port-card"><div class="port-num">110</div><div class="port-name">POP3</div><div class="port-proto">TCP</div></div>
+    </div>
+    <div class="tip"><div class="tip-label">✓ Cas particulier DNS</div>DNS utilise <strong>UDP</strong> pour les requêtes client → serveur, et <strong>TCP</strong> pour les communications serveur → serveur (transferts de zone)</div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">Protocoles couche application</div>
+    <table>
+      <tr><th>Protocole</th><th>Rôle</th><th>Transport</th></tr>
+      <tr><td><strong>HTTP GET</strong></td><td>Demander une page HTML à un serveur web</td><td>TCP 80</td></tr>
+      <tr><td><strong>HTTP POST/PUT</strong></td><td>Charger du contenu vers le serveur</td><td>TCP 80</td></tr>
+      <tr><td><strong>SMB</strong></td><td>Partage fichiers/imprimantes — connexion longue durée</td><td>TCP</td></tr>
+      <tr><td><strong>FTP</strong></td><td>Transfert fichiers — 2 connexions (commandes + données)</td><td>TCP 20/21</td></tr>
+      <tr><td><strong>DHCP Discover</strong></td><td>Client cherche un serveur DHCP — destination IP 255.255.255.255</td><td>UDP</td></tr>
+    </table>
+    <div class="piege"><div class="piege-label">⚠ Piège HTTP</div>GET = <strong>demander</strong> une page. POST/PUT = <strong>envoyer</strong> du contenu. Ne pas confondre !</div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">Modèles OSI vs TCP/IP — couches</div>
+    <table>
+      <tr><th>OSI</th><th>TCP/IP</th><th>Protocoles examples</th></tr>
+      <tr><td>Application (7)</td><td rowspan="3" style="vertical-align:middle">Application</td><td rowspan="3">HTTP, DNS, DHCP, FTP, SMTP, POP3, SMB</td></tr>
+      <tr><td>Présentation (6)</td></tr>
+      <tr><td>Session (5)</td></tr>
+      <tr><td>Transport (4)</td><td>Transport</td><td>TCP, UDP</td></tr>
+      <tr><td>Réseau (3)</td><td>Internet</td><td>IP, ICMP, ARP</td></tr>
+      <tr><td>Liaison de données (2)</td><td rowspan="2" style="vertical-align:middle">Accès réseau</td><td rowspan="2">Ethernet, Wi-Fi</td></tr>
+      <tr><td>Physique (1)</td></tr>
+    </table>
+    <div class="piege"><div class="piege-label">⚠ Piège</div>TCP et UDP sont des protocoles de <strong>couche transport</strong> — pas de la couche application. ARP est <strong>couche réseau</strong> — pas transport.</div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">P2P vs Client-Serveur</div>
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">Client-Serveur</div>
+        <p>Serveur dédié + clients<br>Ex : requête DNS, navigation web, FTP<br>Un équipement joue un seul rôle à la fois</p>
+      </div>
+      <div class="card">
+        <div class="card-title">P2P (Peer-to-Peer)</div>
+        <p>Pas de serveur dédié — ressources décentralisées<br>Ex : BitTorrent, eMule, eDonkey, Bitcoin<br>Un équipement peut être client ET serveur simultanément</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">Flash cards — clique pour voir la réponse</div>
+    <div class="flash-grid">
+      <div class="flash" onclick="this.classList.toggle('open')">
+        <div class="flash-q">Quel facteur détermine la taille de la fenêtre TCP ?</div>
+        <div class="flash-a">La quantité de données que la DESTINATION peut traiter simultanément (pas la source)</div>
+        <div class="flash-hint">Clique pour voir</div>
+      </div>
+      <div class="flash" onclick="this.classList.toggle('open')">
+        <div class="flash-q">Que fait TCP que UDP ne fait pas ?</div>
+        <div class="flash-a">Garantit la livraison, réordonne les segments (numéros de séquence), contrôle de flux, connexion en 3 étapes</div>
+        <div class="flash-hint">Clique pour voir</div>
+      </div>
+      <div class="flash" onclick="this.classList.toggle('open')">
+        <div class="flash-q">Port Telnet ? Port SSH ?</div>
+        <div class="flash-a">Telnet = port 23 (TCP) · SSH = port 22 (TCP)</div>
+        <div class="flash-hint">Clique pour voir</div>
+      </div>
+      <div class="flash" onclick="this.classList.toggle('open')">
+        <div class="flash-q">Quelle est l'adresse IP destination d'un DHCP Discover ?</div>
+        <div class="flash-a">255.255.255.255 (diffusion limitée) — le client n'a pas encore d'adresse IP</div>
+        <div class="flash-hint">Clique pour voir</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODULE 4 ============ -->
+<div class="content" id="m4">
+  <div class="module-header">
+    <div class="module-icon" style="background:var(--purple-dim)">🔒</div>
+    <div class="module-info">
+      <h2>Sécurité & Dépannage</h2>
+      <p>SSH · Telnet · Mots de passe · Attaques · ping/tracert · AAA · Méthodologie</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">SSH vs Telnet <span class="tag tag-red">Toujours posé</span></div>
+    <table>
+      <tr><th>Critère</th><th>SSH (port 22)</th><th>Telnet (port 23)</th></tr>
+      <tr><td>Chiffrement</td><td>Oui — données + authentification chiffrées</td><td>Non — texte clair</td></tr>
+      <tr><td>Sécurité</td><td>Sécurisé pour accès distant</td><td>Risqué — mot de passe visible</td></tr>
+      <tr><td>Usage recommandé</td><td>Toujours (administration réseau)</td><td>Jamais en production</td></tr>
+    </table>
+    <div class="tip"><div class="tip-label">✓ Configuration SSH sur routeur Cisco</div>
+      3 étapes obligatoires : <br>
+      1. <code>ip domain-name exemple.com</code> (nom de domaine)<br>
+      2. <code>crypto key generate rsa</code> (génère les clés RSA — SSH activé automatiquement après)<br>
+      3. Créer une base d'utilisateurs locaux (<code>username admin secret ...</code>)<br>
+      + Sur le vty : <code>login local</code> + <code>transport input ssh</code>
+    </div>
+    <div class="piege"><div class="piege-label">⚠ Piège</div>SSH est activé <strong>automatiquement</strong> après la génération des clés RSA — pas besoin de l'activer manuellement !</div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">Mots de passe — règles & exemples <span class="tag tag-green">Questions faciles</span></div>
+    <table>
+      <tr><th>Mot de passe</th><th>Évaluation</th><th>Raison</th></tr>
+      <tr><td><code>password</code></td><td style="color:var(--red)">Faible</td><td>Mot courant du dictionnaire</td></tr>
+      <tr><td><code>admin</code></td><td style="color:var(--red)">Faible</td><td>Mot de passe par défaut sur beaucoup d'appareils</td></tr>
+      <tr><td><code>Elizabeth</code></td><td style="color:var(--red)">Faible</td><td>Prénom — information personnelle facilement trouvée</td></tr>
+      <tr><td><code>PR3s!d7n&0</code></td><td style="color:var(--green)">Fort</td><td>10 caractères, majuscules + chiffres + caractères spéciaux</td></tr>
+    </table>
+    <div class="info"><div class="info-label">ℹ Règles mot de passe fort</div>Min. 8 caractères (préférable 10) · Mélange majuscules/minuscules/chiffres/spéciaux · Pas de mots du dictionnaire · Pas d'infos personnelles · Pas de séquences (123, abc)</div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">Types d'attaques réseau</div>
+    <table>
+      <tr><th>Attaque</th><th>Description</th></tr>
+      <tr><td><strong>Reconnaissance</strong></td><td>L'attaquant collecte des informations sur le réseau pour identifier des vulnérabilités (scans, sniffing)</td></tr>
+      <tr><td><strong>Brute force</strong></td><td>Essai de toutes les combinaisons de mots de passe possibles</td></tr>
+      <tr><td><strong>Man-in-the-middle</strong></td><td>L'attaquant s'intercale entre deux communicants pour intercepter/modifier les données</td></tr>
+      <tr><td><strong>DoS / DDoS</strong></td><td>Saturation d'un service pour le rendre indisponible</td></tr>
+    </table>
+    <div class="tip"><div class="tip-label">✓ Contre la brute force</div><code>login block-for 60 attempts 5 within 60</code> → bloque les connexions pendant 60s après 5 tentatives échouées en 60s</div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">Sécurité réseau — concepts AAA & défense</div>
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">AAA</div>
+        <p><strong>Authentication</strong> — prouver son identité<br><strong>Authorization</strong> — droits d'accès aux ressources<br><strong>Accounting</strong> — journalisation des activités</p>
+      </div>
+      <div class="card">
+        <div class="card-title">IDS vs IPS</div>
+        <p><strong>IDS</strong> — détecte et alerte (passif)<br><strong>IPS</strong> — détecte et bloque en temps réel (actif)<br>→ "Détecter les attaques en temps réel" = IPS</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Redondance</div>
+        <p>Plusieurs chemins physiques entre les switches → élimine les points de défaillance unique</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Analyseur de protocole</div>
+        <p>Capture le trafic pour documenter les besoins de chaque segment AVANT une mise à niveau réseau</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">Outils de dépannage <span class="tag tag-red">Souvent posé</span></div>
+    <table>
+      <tr><th>Commande</th><th>Rôle</th><th>À retenir</th></tr>
+      <tr><td><code>ping</code></td><td>Test de connectivité — envoie des paquets ICMP echo</td><td>! = réponse · . = timeout · U = inaccessible (routeur sans route)</td></tr>
+      <tr><td><code>tracert / traceroute</code></td><td>Trace le chemin paquet par paquet — utilise ICMP</td><td>Dépanner au premier saut qui échoue</td></tr>
+      <tr><td><code>tracert -6</code></td><td>Force l'utilisation d'IPv6</td><td>Pas "limite à 6 sauts" !</td></tr>
+      <tr><td><code>show ip route</code></td><td>Affiche la table de routage du routeur</td><td>Voir les réseaux connus et interfaces de sortie</td></tr>
+      <tr><td><code>ipconfig</code></td><td>Affiche la config IP du PC</td><td>169.254.x.x → DHCP injoignable</td></tr>
+    </table>
+    <div class="piege"><div class="piege-label">⚠ Piège ping 169.254.x.x</div>Si ipconfig affiche une adresse <code>169.254.x.x</code> → le PC <strong>ne peut pas contacter le serveur DHCP</strong>. Windows a attribué automatiquement une adresse APIPA.</div>
+    <div class="piege"><div class="piege-label">⚠ Piège tracert -6</div><code>tracert -6</code> = forcer IPv6 — ce n'est PAS "limiter à 6 sauts" !</div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">Méthodologie de dépannage — ordre des étapes <span class="tag tag-amber">Ordre important</span></div>
+    <div style="counter-reset:step;margin-top:6px;">
+      <table>
+        <tr><th>#</th><th>Étape</th></tr>
+        <tr><td>1</td><td><strong>Identifier</strong> le problème (conversation avec l'utilisateur)</td></tr>
+        <tr><td>2</td><td><strong>Établir une théorie</strong> sur les causes probables</td></tr>
+        <tr><td>3</td><td><strong>Tester la théorie</strong> pour déterminer la cause</td></tr>
+        <tr><td>4</td><td><strong>Établir un plan d'action</strong> pour résoudre le problème</td></tr>
+        <tr><td>5</td><td><strong>Vérifier</strong> toutes les fonctionnalités + mesures préventives</td></tr>
+        <tr><td>6</td><td><strong>Documenter</strong> les constats, actions et résultats</td></tr>
+      </table>
+    </div>
+    <div class="piege"><div class="piege-label">⚠ Piège</div>Après avoir identifié le problème → étape suivante = <strong>établir une théorie</strong> (pas "tester" directement !)</div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">Ligne de base réseau (Baseline)</div>
+    <ul>
+      <li>Documenter les performances <strong>quand le réseau fonctionne normalement</strong></li>
+      <li>Comparaison future : si ping aller-retour passe de 36/97/132 ms à 1458/2390/6066 ms → <strong>problème de latence/délai</strong></li>
+      <li>L'analyseur de protocole capture le trafic pour établir la baseline de chaque segment</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <div class="section-head">Flash cards — clique pour voir la réponse</div>
+    <div class="flash-grid">
+      <div class="flash" onclick="this.classList.toggle('open')">
+        <div class="flash-q">Quelle est la différence principale entre SSH et Telnet ?</div>
+        <div class="flash-a">SSH chiffre les données ET l'authentification. Telnet envoie tout en texte clair (mot de passe visible).</div>
+        <div class="flash-hint">Clique pour voir</div>
+      </div>
+      <div class="flash" onclick="this.classList.toggle('open')">
+        <div class="flash-q">Que signifie "U" dans le résultat d'un ping Cisco ?</div>
+        <div class="flash-a">Un routeur sur le chemin n'a pas de route vers la destination et a envoyé un message ICMP "destination inaccessible"</div>
+        <div class="flash-hint">Clique pour voir</div>
+      </div>
+      <div class="flash" onclick="this.classList.toggle('open')">
+        <div class="flash-q">Quelle est la fonction d'un IPS ?</div>
+        <div class="flash-a">Détecter ET bloquer les attaques en temps réel (IDS détecte seulement)</div>
+        <div class="flash-hint">Clique pour voir</div>
+      </div>
+      <div class="flash" onclick="this.classList.toggle('open')">
+        <div class="flash-q">Quelle commande protège contre les attaques brute force ?</div>
+        <div class="flash-a">login block-for 60 attempts 5 within 60</div>
+        <div class="flash-hint">Clique pour voir</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function showTab(id){
+  document.querySelectorAll('.content').forEach(c=>c.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
